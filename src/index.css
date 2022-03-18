@@ -17,7 +17,7 @@ code {
   align-items: center;
   justify-content: center;
 }
-.App, .calculator-container, .display-container, .button-container {
+.App, .calculator-container, .display-container, .button-container, .display, .buttons, .button {
   border: 1px solid black;
 }
 
@@ -37,7 +37,38 @@ code {
   margin-bottom: 5px;
 }
 
+.display {
+  margin: 10px;
+  height: 130px;
+  width: 430px;
+}
+
 .button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ 
   height: 500px;
   width:450px;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  margin: 10px;
+  height: 480px;
+  width:430px;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  line-height: 100px;
+  text-align: center;
+  height: 80px;
+  width: 80px;
 }

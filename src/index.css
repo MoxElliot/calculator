@@ -57,9 +57,10 @@ code {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+
   padding: 5px;
   margin: 10px;
-  height: 480px;
+  height: auto;
   width:430px;
 }
 

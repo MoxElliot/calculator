@@ -1,93 +1,86 @@
-import React from 'react'
+
+import React, { Component } from 'react'
+import ReactDOM from "react-dom";
 import "./index.css"
 
 class App extends React.Component {
+ state = {
+      num: "Enter Value"
+    }
+    
+ 
+  changeNum = e => {
+    e.preventDefault()
+    this.setState({
+      num: this.state.num
+    });
+  };
+
   render(){
+    console.log(this.props)
   return (
     <div className="App" style={{backgroundColor: "grey"}}>
         <div className="calculator-container" style={{backgroundColor: "aliceblue"}}>
           <div className="display-container" style={{backgroundColor: "beige"}}>
-            <Display />
+            <div className="display" id="display" style={{ backgroundColor: "bisque" }}>
+             Current Value:{this.state.num}
+            </div>
           </div>
           <div className="button-container" style={{backgroundColor: "beige"}}>
-            <Buttons />
+            <NumberButtonSection changeNum={this.changeNum}/>
+            <OperatorButton />
           </div>
         </div>
     </div>
   );
 }}
 
-class Display extends React.Component {
-  
-  render() {
-    
+
+
+const NumberButtonSection = (props) => {
+  console.log(props.changeNum)
+  const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  const numButtons = nums.map(num => 
+    <NumberButton value={num} key={num} id={num} changeNum={props.changeNum} />
+    );
     return (
-      <><div className="display" id="display" style={{ backgroundColor: "bisque" }}>
-       
-      </div><div className="display" id="lastOperator" style={{ backgroundColor: "bisque" }}>
-      
-        </div></>
+      <div className="buttons" id="number-buttons">
+        {numButtons}
+      </div>
     )
-  }
 }
-
-const Buttons = () => {
+const NumberButton = (props) => {
+  
   return (
-    <div className="buttons" style={{backgroundColor: "bisque"}}>
-        <button id="nine" className="button">
-          9
-        </button>
-        <button id="eight" className="button">
-          8
-        </button>
-        <button id="seven" className="button">
-          7
-        </button>
-        <button id="divide" className="button">
-          /
-        </button>
-        <button id="six" className="button">
-          6
-        </button>
-        <button id="five" className="button">
-          5
-        </button>
-        <button id="four" className="button">
-          4
-        </button>
-        <button id="multiply" className="button">
-          X
-        </button>
-        <button id="three" className="button">
-          3
-        </button>
-        <button id="two" className="button">
-          2
-        </button>
-        <button id="one" className="button">
-          1
-        </button>
-        <button id="add" className="button">
-          +
-        </button>
-        <button id="clear" className="button">
-          AC
-        </button>
-        <button id="zero" className="button">
-          0
-        </button>
-        <button id="decimal" className="button">
-          .
-        </button>
-        <button id="equals" className="button">
-          =
-        </button>
-        <button id="subtract" className="button">
-          -
-        </button>
-
-    </div>
+      <button className="button" id="number-button" onClick={props.changeNum}>
+        {props.value}
+      </button>
   )
 }
 
+const OperatorButton = () => {
+  return (
+<div className="buttons" id="operator-buttons">
+  <button id="add" className="button">
+  +
+</button>
+<button id="clear" className="button">
+  AC
+</button>
+<button id="zero" className="button">
+  0
+</button>
+<button id="decimal" className="button">
+  .
+</button>
+<button id="equals" className="button">
+  =
+</button>
+<button id="subtract" className="button">
+  -
+</button>
+</div>
+
+)
+}
 export default App;

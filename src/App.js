@@ -5,19 +5,20 @@ import "./index.css"
 
 class App extends React.Component {
  state = {
-      num: "Enter Value"
+      num: "Enter Value",
+      display: []
     }
     
  
-  changeNum = e => {
-    e.preventDefault()
+  changeNum = (childData) => {
+    
     this.setState({
-      num: this.state.num
+      num: childData
     });
   };
 
   render(){
-    console.log(this.props)
+    
   return (
     <div className="App" style={{backgroundColor: "grey"}}>
         <div className="calculator-container" style={{backgroundColor: "aliceblue"}}>
@@ -27,7 +28,7 @@ class App extends React.Component {
             </div>
           </div>
           <div className="button-container" style={{backgroundColor: "beige"}}>
-            <NumberButtonSection changeNum={this.changeNum}/>
+            <NumberButtonSection parentCallback={this.changeNum}/>
             <OperatorButton />
           </div>
         </div>
@@ -38,10 +39,10 @@ class App extends React.Component {
 
 
 const NumberButtonSection = (props) => {
-  console.log(props.changeNum)
+  
   const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
   const numButtons = nums.map(num => 
-    <NumberButton value={num} key={num} id={num} changeNum={props.changeNum} />
+    <NumberButton value={num} key={num} id={num} parentCallback={props.parentCallback} />
     );
     return (
       <div className="buttons" id="number-buttons">
@@ -51,8 +52,13 @@ const NumberButtonSection = (props) => {
 }
 const NumberButton = (props) => {
   
+  const onTrigger = (e) => {
+    props.parentCallback(props.value);
+    e.preventDefault()
+  }
+  
   return (
-      <button className="button" id="number-button" onClick={props.changeNum}>
+      <button className="button" id="number-button" onClick={onTrigger}>
         {props.value}
       </button>
   )

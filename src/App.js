@@ -10,10 +10,10 @@ class App extends React.Component {
     }
     
  
-  changeNum = (childData) => {
+  changeNum = (numberKey) => {
     
     this.setState({
-      num: childData
+      num: numberKey
     });
   };
 
@@ -28,7 +28,7 @@ class App extends React.Component {
             </div>
           </div>
           <div className="button-container" style={{backgroundColor: "beige"}}>
-            <NumberButtonSection parentCallback={this.changeNum}/>
+            <NumberButtonSection numberToDisplay={this.changeNum}/>
             <OperatorButton />
           </div>
         </div>
@@ -42,7 +42,7 @@ const NumberButtonSection = (props) => {
   
   const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
   const numButtons = nums.map(num => 
-    <NumberButton value={num} key={num} id={num} parentCallback={props.parentCallback} />
+    <NumberButton value={num} key={num} id={num} numberToDisplay={props.numberToDisplay} />
     );
     return (
       <div className="buttons" id="number-buttons">
@@ -52,13 +52,13 @@ const NumberButtonSection = (props) => {
 }
 const NumberButton = (props) => {
   
-  const onTrigger = (e) => {
-    props.parentCallback(props.value);
+  const onNumberButtonPush = (e) => {
+    props.numberToDisplay(props.value);
     e.preventDefault()
   }
   
   return (
-      <button className="button" id="number-button" onClick={onTrigger}>
+      <button className="button" id="number-button" onClick={onNumberButtonPush}>
         {props.value}
       </button>
   )

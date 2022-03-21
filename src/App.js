@@ -7,18 +7,20 @@ class App extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      num: "Enter Value",
-      display: []
+      lastDisplay: "Enter Value",
+      fullDisplay: [1, 2]
     }
   }
  
    onNumberKeyClick = (e) => {
-    
-    console.log(e.key)
+   
+    console.log(this.state.lastDisplay)
+    console.log(this.state.fullDisplay)
     if((e.key >= 0) && (e.key <= 9)) 
-    { console.log("Faaaaaarrt");
+    { 
     this.setState({
-      num: e.key
+      lastDisplay: e.key,
+      fullDisplay: [...this.state.fullDisplay, e.key] //  https://stackoverflow.com/questions/37435334/correct-way-to-push-into-state-array  using es6 notation w/spread operator to "push" into state array
     });
     
   }}
@@ -28,19 +30,23 @@ class App extends React.Component {
 callback function to pass state (child data = numberKey) up from child component (NumberButtonSection)*/}
     
     this.setState({
-      num: numberKey
+      lastDisplay: numberKey,
+      fullDisplay: [...this.state.fullDisplay, numberKey] 
+      
     });
   };
 
   render(){
     
   return (
-    <div className="App" style={{backgroundColor: "grey"}} onKeyPress={this.onNumberKeyClick}
-      ref={this.ref}>
+    <div className="App" style={{backgroundColor: "grey"}} onKeyPress={this.onNumberKeyClick}>
         <div className="calculator-container" style={{backgroundColor: "aliceblue"}}>
           <div className="display-container" style={{backgroundColor: "beige"}}>
             <div className="display" id="display" style={{ backgroundColor: "bisque" }}>
-             Current Value:{this.state.num}
+             Current Value:{this.state.lastDisplay}
+            </div>
+            <div className="display" id="display" style={{ backgroundColor: "bisque" }}>
+             ::{this.state.fullDisplay}
             </div>
           </div>
           <div className="button-container" style={{backgroundColor: "beige"}}>  

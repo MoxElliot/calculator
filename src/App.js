@@ -4,13 +4,28 @@ import ReactDOM from "react-dom";
 import "./index.css"
 
 class App extends React.Component {
- state = {
+  constructor (props) {
+    super(props);
+    this.state = {
       num: "Enter Value",
       display: []
     }
-    
+  }
  
-  changeNum = (numberKey) => {
+   onNumberKeyClick = (e) => {
+    
+    console.log(e.key)
+    if((e.key >= 0) && (e.key <= 9)) 
+    { console.log("Faaaaaarrt");
+    this.setState({
+      num: e.key
+    });
+    
+  }}
+
+
+  changeNum = (numberKey) => {        {/*// https://www.geeksforgeeks.org/how-to-pass-data-from-child-component-to-its-parent-in-reactjs/ 
+callback function to pass state (child data = numberKey) up from child component (NumberButtonSection)*/}
     
     this.setState({
       num: numberKey
@@ -20,15 +35,16 @@ class App extends React.Component {
   render(){
     
   return (
-    <div className="App" style={{backgroundColor: "grey"}}>
+    <div className="App" style={{backgroundColor: "grey"}} onKeyPress={this.onNumberKeyClick}
+      ref={this.ref}>
         <div className="calculator-container" style={{backgroundColor: "aliceblue"}}>
           <div className="display-container" style={{backgroundColor: "beige"}}>
             <div className="display" id="display" style={{ backgroundColor: "bisque" }}>
              Current Value:{this.state.num}
             </div>
           </div>
-          <div className="button-container" style={{backgroundColor: "beige"}}>
-            <NumberButtonSection numberToDisplay={this.changeNum}/>
+          <div className="button-container" style={{backgroundColor: "beige"}}>  
+            <NumberButtonSection numberToDisplay={this.changeNum}/> {/* passing callback function from child as a props from teh parent component*/}
             <OperatorButton />
           </div>
         </div>
@@ -51,12 +67,12 @@ const NumberButtonSection = (props) => {
     )
 }
 const NumberButton = (props) => {
-  
-  const onNumberButtonPush = (e) => {
+
+  const onNumberButtonPush = (e) => {   {/* child compoenet calls the parent callback using props and passes data back to parent */}
     props.numberToDisplay(props.value);
     e.preventDefault()
   }
-  
+
   return (
       <button className="button" id="number-button" onClick={onNumberButtonPush}>
         {props.value}

@@ -8,14 +8,12 @@ class App extends React.Component {
     super(props);
     this.state = {
       lastDisplay: "Enter Value",
-      fullDisplay: [1, 2]
+      fullDisplay: []
     }
   }
  
    onNumberKeyClick = (e) => {
    
-    console.log(this.state.lastDisplay)
-    console.log(this.state.fullDisplay)
     if((e.key >= 0) && (e.key <= 9)) 
     { 
     this.setState({
@@ -26,12 +24,29 @@ class App extends React.Component {
   }}
 
 
-  changeNum = (numberKey) => {        {/*// https://www.geeksforgeeks.org/how-to-pass-data-from-child-component-to-its-parent-in-reactjs/ 
-callback function to pass state (child data = numberKey) up from child component (NumberButtonSection)*/}
+  changeDisplay = (displayKey) => {        
+    this.setState({
+      lastDisplay: displayKey,
+      fullDisplay: [...this.state.fullDisplay, displayKey] 
+      
+    });
+  };
+
+  clearDisplay = () => { 
     
     this.setState({
-      lastDisplay: numberKey,
-      fullDisplay: [...this.state.fullDisplay, numberKey] 
+      lastDisplay: "Enter Value",
+      fullDisplay: [] 
+      
+    });
+  };
+
+  evaluateDisplay = () => {       
+  
+    const equation = this.state.fullDisplay.join("").replace("x", "*")
+    this.setState({
+      lastDisplay: "Enter Value",
+      fullDisplay: [eval(equation)] 
       
     });
   };
@@ -43,15 +58,21 @@ callback function to pass state (child data = numberKey) up from child component
         <div className="calculator-container" style={{backgroundColor: "aliceblue"}}>
           <div className="display-container" style={{backgroundColor: "beige"}}>
             <div className="display" id="display" style={{ backgroundColor: "bisque" }}>
-             Current Value:{this.state.lastDisplay}
+             Current Value: {this.state.lastDisplay}
             </div>
             <div className="display" id="display" style={{ backgroundColor: "bisque" }}>
-             ::{this.state.fullDisplay}
+             :: {this.state.fullDisplay}
             </div>
           </div>
           <div className="button-container" style={{backgroundColor: "beige"}}>  
-            <NumberButtonSection numberToDisplay={this.changeNum}/> {/* passing callback function from child as a props from teh parent component*/}
-            <OperatorButton />
+            <NumberButtonSection numberToDisplay={this.changeDisplay}/> {/* passing callback function from child as a props from the parent component*/}
+            
+            <div className="buttons" id="operator-buttons">
+            <OperatorButtonSection operatorToDisplay={this.changeDisplay} />
+            <ClearButton value={"AC"} key={"AC"} id={"AC"} operatorToDisplay={this.clearDisplay}/>
+            <EqualButton value={"="} key={"="} id={"equals"} operatorToDisplay={this.evaluateDisplay}/> 
+            </div>
+
           </div>
         </div>
     </div>
@@ -62,9 +83,9 @@ callback function to pass state (child data = numberKey) up from child component
 
 const NumberButtonSection = (props) => {
   
-  const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  const nums = [[0, "zero"], [1, "one"], [2, "two"], [3, "three"], [4, "four"], [5, "five"], [6, "six"], [7, "seven"], [8, "eight"], [9, "nine"]]
   const numButtons = nums.map(num => 
-    <NumberButton value={num} key={num} id={num} numberToDisplay={props.numberToDisplay} />
+    <NumberButton value={num[0]} key={num[0]} id={num[1]} numberToDisplay={props.numberToDisplay} />
     );
     return (
       <div className="buttons" id="number-buttons">
@@ -74,41 +95,70 @@ const NumberButtonSection = (props) => {
 }
 const NumberButton = (props) => {
 
-  const onNumberButtonPush = (e) => {   {/* child compoenet calls the parent callback using props and passes data back to parent */}
+  const onButtonPush = (e) => {   /* child compoenet calls the parent callback using props and passes data back to parent */
+
     props.numberToDisplay(props.value);
     e.preventDefault()
   }
-
+  console.log(props.value)
   return (
-      <button className="button" id="number-button" onClick={onNumberButtonPush}>
+      <button className="button" id={props.id}onClick={onButtonPush}>
         {props.value}
       </button>
   )
 }
 
-const OperatorButton = () => {
+const OperatorButtonSection = (props) => {
+  
+  const ops = [["x", "multiply"], ["/", "divide"], ["+", "add"], ["-", "subtract"], [".", "decimal"]]
+  const opsButtons = ops.map(op => 
+    <OperatorButton value={op[0]} key={op[0]} id={op[1]} operatorToDisplay={props.operatorToDisplay} />
+    );
+    return (
+      <>
+        {opsButtons}
+        
+      </>
+    )
+}
+const OperatorButton = (props) => {
+
+  const onButtonPush = (e) => {   /* child compoenet calls the parent callback using props and passes data back to parent */
+ 
+    props.operatorToDisplay(props.value);
+    e.preventDefault()
+  }
+
   return (
-<div className="buttons" id="operator-buttons">
-  <button id="add" className="button">
-  +
-</button>
-<button id="clear" className="button">
-  AC
-</button>
-<button id="zero" className="button">
-  0
-</button>
-<button id="decimal" className="button">
-  .
-</button>
-<button id="equals" className="button">
+      <button className="button" id={props.id} onClick={onButtonPush}>
+        {props.value}
+      </button>
+  )
+}
+
+const ClearButton = (props) => {
+  const onButtonPush = (e) => {   /* child compoenet calls the parent callback using props and passes data back to parent */
+ 
+  props.operatorToDisplay(props.value);
+  e.preventDefault()
+}
+  return (
+  <button id="clear" className="button" onClick={onButtonPush}>
+    AC
+  </button>
+)}
+
+const EqualButton = (props) => {
+
+  const onButtonPush = (e) => {   /* child compoenet calls the parent callback using props and passes data back to parent */
+ 
+  props.operatorToDisplay(props.value);
+  e.preventDefault()
+}
+  return (
+
+<button id="equals" className="button" onClick={onButtonPush}>
   =
 </button>
-<button id="subtract" className="button">
-  -
-</button>
-</div>
-
-)
-}
+)}
 export default App;

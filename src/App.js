@@ -8,7 +8,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       lastDisplay: "Enter Value",
-      fullDisplay: []
+      fullDisplay: 0
     }
   }
  
@@ -24,7 +24,10 @@ class App extends React.Component {
   }}
 
 
-  changeDisplay = (displayKey) => {        
+  changeDisplay = (displayKey) => {   
+    if (this.state.fullDisplay === 0) {
+      this.state.fullDisplay = []
+    }     
     this.setState({
       lastDisplay: displayKey,
       fullDisplay: [...this.state.fullDisplay, displayKey] 
@@ -36,7 +39,7 @@ class App extends React.Component {
     
     this.setState({
       lastDisplay: "Enter Value",
-      fullDisplay: [] 
+      fullDisplay: 0 
       
     });
   };
@@ -57,11 +60,11 @@ class App extends React.Component {
     <div className="App" style={{backgroundColor: "grey"}} onKeyPress={this.onNumberKeyClick}>
         <div className="calculator-container" style={{backgroundColor: "aliceblue"}}>
           <div className="display-container" style={{backgroundColor: "beige"}}>
-            <div className="display" id="display" style={{ backgroundColor: "bisque" }}>
+            <div className="display" id="current-display" style={{ backgroundColor: "bisque" }}>
              Current Value: {this.state.lastDisplay}
             </div>
             <div className="display" id="display" style={{ backgroundColor: "bisque" }}>
-             :: {this.state.fullDisplay}
+             {this.state.fullDisplay}
             </div>
           </div>
           <div className="button-container" style={{backgroundColor: "beige"}}>  

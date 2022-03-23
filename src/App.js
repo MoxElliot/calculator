@@ -27,10 +27,12 @@ class App extends React.Component {
 
 
   changeDisplay = (displayKey, e) => {  
-    e.preventDefault();
-    const operators = ["+", "-", "x", "/", "."]; 
-    const regex = /(\d*\.+\d*\.+\d*)/mgi
     
+    const operators = ["+", "-", "x", "/", "."]; 
+    const regex = /\d+([?:,.,])+\d+([?:,.,])+/mgi
+    console.log(([this.state.fullDisplay].join("").match(regex)))
+    console.log([this.state.fullDisplay].join(""))
+    console.log(this.state.fullDisplay)
     if (this.state.fullDisplay === 0  && displayKey !== 0) {
      
       this.setState({
@@ -44,7 +46,7 @@ class App extends React.Component {
       this.setState({
         lastDisplay: displayKey,
         fullDisplay: [...this.state.fullDisplay.filter((_, i) => i !== this.state.fullDisplay.length-1), displayKey]
-    })} else if  ([...this.state.fullDisplay, displayKey].join("").match(regex) === true) {
+    })} else if  (([this.state.fullDisplay].join("").match(regex))) {
       console.log("hello")
       this.setState({
         lastDisplay: "Multiple Decimals Not Allowed",
@@ -68,6 +70,7 @@ class App extends React.Component {
   evaluateDisplay = () => {       
   
     const equation = this.state.fullDisplay.join("").replaceAll("x", "*")
+    console.log(equation)
     this.setState({
       lastDisplay: "Enter Value",
       fullDisplay: [eval(equation)] 

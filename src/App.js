@@ -24,15 +24,34 @@ class App extends React.Component {
   }}
 
 
-  changeDisplay = (displayKey) => {   
-    if (this.state.fullDisplay === 0) {
-      this.state.fullDisplay = []
-    }     
+  changeDisplay = (displayKey) => {  
+    const operators = ["+", "-", "x", "/", "."]; 
+    
+    if (this.state.fullDisplay === 0  && displayKey !== 0) {
+     
+      this.setState({
+        lastDisplay: displayKey,
+        fullDisplay: [displayKey] 
+    })} else if (this.state.fullDisplay === 0  && displayKey === 0) {
+      this.setState({
+        lastDisplay: "Leading Zeros Not Allowed",
+        fullDisplay: this.state.fullDisplay
+    })} else if (operators.includes(this.state.fullDisplay[this.state.fullDisplay.length-1]) && operators.includes(displayKey)) {
+      this.setState({
+        lastDisplay: displayKey,
+        fullDisplay: [...this.state.fullDisplay.filter((_, i) => i !== this.state.fullDisplay.length-1), displayKey]
+    })
+    console.log((this.state.fullDisplay[this.state.fullDisplay.length-1]))
+    } else if  (displayKey === "." && this.state.fullDisplay.includes(/(\d*\.+\d*\.+\d*)/mgi)) {
+      this.setState({
+        lastDisplay: "Multiple Decimals Not Allowed",
+        fullDisplay: this.state.fullDisplay
+    })} else {
     this.setState({
       lastDisplay: displayKey,
       fullDisplay: [...this.state.fullDisplay, displayKey] 
       
-    });
+    });}
   };
 
   clearDisplay = () => { 
@@ -103,7 +122,7 @@ const NumberButton = (props) => {
     props.numberToDisplay(props.value);
     e.preventDefault()
   }
-  console.log(props.value)
+ 
   return (
       <button className="button" id={props.id}onClick={onButtonPush}>
         {props.value}

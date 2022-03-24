@@ -10,9 +10,6 @@ class App extends React.Component {
       lastDisplay: "Enter Value",
       fullDisplay: 0
     }
-  
-  this.onNumberKeyClick = this.onNumberKeyClick.bind(this);
-  this.changeDisplay = this.changeDisplay.bind(this);
 }
    onNumberKeyClick = (e) => {
    
@@ -29,10 +26,16 @@ class App extends React.Component {
   changeDisplay = (displayKey, e) => {  
     
     const operators = ["+", "-", "x", "/", "."]; 
-    const regex = /\d+([?:,.,])+\d+([?:,.,])+/mgi
-    console.log(([this.state.fullDisplay].join("").match(regex)))
-    console.log([this.state.fullDisplay].join(""))
-    console.log(this.state.fullDisplay)
+    //const regex = /\d+([?:,.,])+\d+([?:,.,])/mgi;
+    const regex = /\d+(?:,\.,)+\d+(?:\.)+/m
+    const fullDisplay =[this.state.fullDisplay].concat(displayKey)
+    //console.log([this.state.fullDisplay].splice(this.state.fullDisplay.length-1, 0, displayKey));
+    
+    let firstTime = true;
+    console.log("First Time above if")
+    console.log(firstTime)
+    console.log(fullDisplay)
+    console.log(fullDisplay.join(""))
     if (this.state.fullDisplay === 0  && displayKey !== 0) {
      
       this.setState({
@@ -46,12 +49,17 @@ class App extends React.Component {
       this.setState({
         lastDisplay: displayKey,
         fullDisplay: [...this.state.fullDisplay.filter((_, i) => i !== this.state.fullDisplay.length-1), displayKey]
-    })} else if  (([this.state.fullDisplay].join("").match(regex))) {
+    })} else if  (([this.state.fullDisplay].concat(displayKey).join("").match(regex)) && firstTime) {
       console.log("hello")
       this.setState({
         lastDisplay: "Multiple Decimals Not Allowed",
         fullDisplay: this.state.fullDisplay
-    })} else {
+    })
+      firstTime=false;
+      console.log("First Time in else if")
+      console.log(firstTime)
+      console.log((fullDisplay.join("").match(regex)))
+    } else {
     this.setState({
       lastDisplay: displayKey,
       fullDisplay: [...this.state.fullDisplay, displayKey] 
@@ -70,7 +78,7 @@ class App extends React.Component {
   evaluateDisplay = () => {       
   
     const equation = this.state.fullDisplay.join("").replaceAll("x", "*")
-    console.log(equation)
+    console.log(this)
     this.setState({
       lastDisplay: "Enter Value",
       fullDisplay: [eval(equation)] 

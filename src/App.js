@@ -41,11 +41,13 @@ class App extends React.Component {
         lastDisplay: "Multiple Operators or Decimals Not Allowed",
         fullDisplay: [...this.state.fullDisplay.filter((_, i) => i !== this.state.fullDisplay.length-1), displayKey]
     })} else if ([this.state.fullDisplay].concat(displayKey).join("").match(regex2)) {
-      const rest = this.state.fullDisplay.splice(-2);
+      this.state.fullDisplay.splice(-2);
       this.setState({
         lastDisplay: "Improper Use of Negative",
         fullDisplay: [...this.state.fullDisplay, displayKey]
-    })} else if  (([this.state.fullDisplay].concat(displayKey).join("").match(regex)) && firstTime) {
+    })
+      firstTime=false
+    } else if  (([this.state.fullDisplay].concat(displayKey).join("").match(regex)) && firstTime) {
       this.setState({
         lastDisplay: "Multiple Decimals Not Allowed",
         fullDisplay: this.state.fullDisplay

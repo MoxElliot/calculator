@@ -1,6 +1,5 @@
 
-import React, { Component } from 'react'
-import ReactDOM from "react-dom";
+import React from 'react'
 import "./index.css"
 
 class App extends React.Component {
@@ -19,25 +18,17 @@ class App extends React.Component {
       lastDisplay: e.key,
       fullDisplay: [...this.state.fullDisplay, e.key] //  https://stackoverflow.com/questions/37435334/correct-way-to-push-into-state-array  using es6 notation w/spread operator to "push" into state array
     });
-    
   }}
 
 
-  changeDisplay = (displayKey, e) => {  
+  changeDisplay = (displayKey) => {  
     
-    const operators = ["+", "-", "x", "/", "."]; 
-    //const regex = /\d+([?:,.,])+\d+([?:,.,])/mgi;
-    const regex = /\d+(?:,\.,)+\d+(?:\.)+/m
-    const fullDisplay =[this.state.fullDisplay].concat(displayKey)
-    //console.log([this.state.fullDisplay].splice(this.state.fullDisplay.length-1, 0, displayKey));
-    
+    const operators = ["+", "x", "/", "."];
+    const regex = /\d+(?:,\.,)+\d+(?:\.)+/;
+    const regex2 =  /[-]+[x+\/\.-]/;
     let firstTime = true;
-    console.log("First Time above if")
-    console.log(firstTime)
-    console.log(fullDisplay)
-    console.log(fullDisplay.join(""))
+  
     if (this.state.fullDisplay === 0  && displayKey !== 0) {
-     
       this.setState({
         lastDisplay: displayKey,
         fullDisplay: [displayKey] 
@@ -45,20 +36,21 @@ class App extends React.Component {
       this.setState({
         lastDisplay: "Leading Zeros Not Allowed",
         fullDisplay: this.state.fullDisplay
-    })} else if (operators.includes(this.state.fullDisplay[this.state.fullDisplay.length-1]) && operators.includes(displayKey)) {
+    })} else if ((operators.includes(this.state.fullDisplay[this.state.fullDisplay.length-1]) && operators.includes(displayKey)) ) {
       this.setState({
-        lastDisplay: displayKey,
+        lastDisplay: "Multiple Operators or Decimals Not Allowed",
         fullDisplay: [...this.state.fullDisplay.filter((_, i) => i !== this.state.fullDisplay.length-1), displayKey]
+    })} else if ([this.state.fullDisplay].concat(displayKey).join("").match(regex2)) {
+      const rest = this.state.fullDisplay.splice(-2);
+      this.setState({
+        lastDisplay: "Improper Use of Negative",
+        fullDisplay: [...this.state.fullDisplay, displayKey]
     })} else if  (([this.state.fullDisplay].concat(displayKey).join("").match(regex)) && firstTime) {
-      console.log("hello")
       this.setState({
         lastDisplay: "Multiple Decimals Not Allowed",
         fullDisplay: this.state.fullDisplay
     })
       firstTime=false;
-      console.log("First Time in else if")
-      console.log(firstTime)
-      console.log((fullDisplay.join("").match(regex)))
     } else {
     this.setState({
       lastDisplay: displayKey,
@@ -71,14 +63,12 @@ class App extends React.Component {
     this.setState({
       lastDisplay: "Enter Value",
       fullDisplay: 0 
-      
     });
   };
 
   evaluateDisplay = () => {       
   
     const equation = this.state.fullDisplay.join("").replaceAll("x", "*")
-    console.log(this)
     this.setState({
       lastDisplay: "Enter Value",
       fullDisplay: [eval(equation)] 
@@ -100,7 +90,7 @@ class App extends React.Component {
             </div>
           </div>
           <div className="button-container" style={{backgroundColor: "beige"}}>  
-            <NumberButtonSection numberToDisplay={this.changeDisplay}/> {/* passing callback function from child as a props from the parent component*/}
+            <NumberButtonSection numberToDisplay={this.changeDisplay}/>
             
             <div className="buttons" id="operator-buttons">
             <OperatorButtonSection operatorToDisplay={this.changeDisplay} />
@@ -130,7 +120,7 @@ const NumberButtonSection = (props) => {
 }
 const NumberButton = (props) => {
 
-  const onButtonPush = (e) => {   /* child compoenet calls the parent callback using props and passes data back to parent */
+  const onButtonPush = (e) => {  
 
     props.numberToDisplay(props.value);
     e.preventDefault()
@@ -158,7 +148,7 @@ const OperatorButtonSection = (props) => {
 }
 const OperatorButton = (props) => {
 
-  const onButtonPush = (e) => {   /* child compoenet calls the parent callback using props and passes data back to parent */
+  const onButtonPush = (e) => {  
  
     props.operatorToDisplay(props.value);
     e.preventDefault()
@@ -172,7 +162,7 @@ const OperatorButton = (props) => {
 }
 
 const ClearButton = (props) => {
-  const onButtonPush = (e) => {   /* child compoenet calls the parent callback using props and passes data back to parent */
+  const onButtonPush = (e) => {   
  
   props.operatorToDisplay(props.value);
   e.preventDefault()
@@ -185,7 +175,7 @@ const ClearButton = (props) => {
 
 const EqualButton = (props) => {
 
-  const onButtonPush = (e) => {   /* child compoenet calls the parent callback using props and passes data back to parent */
+  const onButtonPush = (e) => {  
  
   props.operatorToDisplay(props.value);
   e.preventDefault()
